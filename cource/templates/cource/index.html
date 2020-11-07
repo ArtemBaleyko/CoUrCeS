@@ -1,0 +1,16 @@
+{% extends 'cource/base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+    <h2>Все курсы:</h2>
+    {% if cources %}
+        {% for cource in cources %}
+            <a href="{% url 'cource' cource.id %}">{{cource.title}}</a>
+        {% endfor %}
+    {% else %}
+        <h1>Курсов пока нет(</h1>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'cource/base.html' %}
+
+{% block title %}
+{{ cource.title }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{cource.title}}</h1>
+    <p>{{cource.description}}</p>
+    <p>{{cource.type_of_cource}}</p>
+    <p>{{cource.attendance}}</p>
+    <p>{{cource.start_date|date:"Y-m-d"}}</p>
+    <p>{{cource.end_date|date:"Y-m-d"}}</p>
+    <p>{{cource.study_hours}}</p>
+    <p>{{cource.base_education}}</p>
+    <p>{{cource.graduate_control}}</p>
+    <p>{{cource.graduate_document}}</p>
+    <p>{{cource.price}}</p>
+    <p>{{cource.organization}}</p>  
+    <h4>Список тем:</h4>
+    {% if topics %}
+    <ul>
+        {% for topic in topics %}
+            <li>{{ topic.name }} - {{topic.hours}} часов</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+        <h3>Темы не найдено(</h3>
+    {% endif %}
+
+    <h4>Расписание:</h4>
+    {% if schedule %}
+        {% for day in schedule %}
+            <h5>{{ day.day }}</h5>
+            <p>{{day.from_time}} - {{day.to_time}}</p>
+        {% endfor %}
+    {% else %}
+        <h3>Расписание не найдено(</h3>
+    {% endif %}
+{% endblock %}
