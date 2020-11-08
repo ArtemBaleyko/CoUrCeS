@@ -1,4 +1,4 @@
-{% extends 'cource/base.html' %}
+{% extends template %}
 
 {% block title %}
 {{ cource.title }}
@@ -17,24 +17,36 @@
     <p>{{cource.graduate_document}}</p>
     <p>{{cource.price}}</p>
     <p>{{cource.organization}}</p>  
-    <h4>Список тем:</h4>
     {% if topics %}
-    <ul>
-        {% for topic in topics %}
-            <li>{{ topic.name }} - {{topic.hours}} часов</li>
-        {% endfor %}
-    </ul>
-    {% else %}
-        <h3>Темы не найдено(</h3>
+        <h4>Список тем:</h4>
+        <ul>           
+            {% for topic in topics %}
+                <li>{{ topic.name }} - {{topic.hours}} часов</li>
+            {% endfor %}
+        </ul>
     {% endif %}
 
-    <h4>Расписание:</h4>
     {% if schedule %}
+        <h4>Расписание:</h4>
+        <ul>
         {% for day in schedule %}
-            <h5>{{ day.day }}</h5>
-            <p>{{day.from_time}} - {{day.to_time}}</p>
+            <li>{{day.day}}: {{day.from_time}} - {{day.to_time}}</li>
         {% endfor %}
-    {% else %}
-        <h3>Расписание не найдено(</h3>
+        </ul>
     {% endif %}
+
+    {% if organization %}
+        <h4>Организация:</h4>
+        <p>{{organization.name}}</p>
+        <p>{{organization.email}}</p>
+        <p>{{organization.web_site}}</p>
+        <p>{{organization.document_series}}</p>
+        <p>{{organization.document_number}}</p>
+        <p>{{organization.document_type}}</p>
+    {% else %}
+    {% endif %}
+    {% ifequal is_owner True %}
+        <a href="{% url 'delete_cource' cource.id %}">Удалить</a><br>
+        <a href="{% url 'edit_cource' cource.id %}">Редактировать</a><br>
+    {% endifequal %}
 {% endblock %}

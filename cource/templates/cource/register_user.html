@@ -1,0 +1,12 @@
+{% extends "cource/base.html" %}
+
+{% block title %}Создайте аккаунт{% endblock %}
+
+{% block content %}
+    <h1>Создайте аккаунт:</h1>
+    <form method="post">
+        {{ user_form.as_p }}
+        {% csrf_token %}
+        <p><button type="submit" class="btn btn-success">Зарегистрироваться</button></p>
+    </form>
+{% endblock %}

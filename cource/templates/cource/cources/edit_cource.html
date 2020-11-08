@@ -1,0 +1,120 @@
+{% extends "cource/base_user.html" %}
+
+{% block title %}Редактировние организации{% endblock %}
+
+{% block content %}
+    <h2>Редактировать:</h2>
+    <form method="post">
+        {% csrf_token %}
+        <p>
+            <label for="title">Название:</label>
+            <input class='form-control' type="text" name="title" value="{{ cource.title }}" required>
+        </p>
+        <p>
+            <label for="description">Описание:</label>
+            <textarea class="form-control" name="description" cols="40" rows="10" required>{{ cource.description }}</textarea>
+        </p>
+        <p>
+            <label for="type_of_cource">Тип проведения:</label>
+            <select class="form-control" name="type_of_cource" required>
+                {% for choice in TYPE_OF_COURCE_CHOICES %}
+                    {% ifequal cource.type_of_cource choice.0 %}
+                        <option selected value="{{ choice.0 }}">{{ choice.1 }}</option>
+                    {% else %}
+                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                    {% endifequal %}
+            {% endfor %}
+            </select>
+        </p>
+        <p>
+            <label for="attendance">Вид проведения</label>
+            <select class="form-control" name="attendance" required>
+                {% for choice in ATTENDANCE_CHOICES %}
+                    {% ifequal cource.attendance choice.0 %}
+                        <option selected value="{{ choice.0 }}">{{ choice.1 }}</option>
+                    {% else %}
+                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                    {% endifequal %}
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <label for="start_date">Дата начала курсов:</label>
+            <input class='form-control' type="date" name="start_date" value="{{ cource.start_date|date:"Y-m-d" }}" required>
+        </p>
+        <p>
+            <label for="end_date">Дата окончания курсов:</label>
+            <input class='form-control' type="date" name="end_date" value="{{ cource.end_date|date:"Y-m-d" }}" required>
+        </p>
+        <p>
+            <label for="study_hours">Колличество часов проведения</label>
+            <input class='form-control' type="number" name="study_hours" value="{{ cource.study_hours }}" required>
+        </p>
+        <p>
+            <label for="base_education">Базовое образование</label>
+            <select class="form-control" name="base_education" required>
+                {% for choice in BASE_EDUCATION_CHOICES %}
+                    {% ifequal cource.base_education choice.0 %}
+                        <option selected value="{{ choice.0 }}">{{ choice.1 }}</option>
+                    {% else %}
+                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                    {% endifequal %}
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <label for="graduate_control">Вид выпускного контроля:</label>
+            <select class="form-control" name="graduate_control" required>
+                {% for choice in GRADUATE_CONTROL_CHOICES %}
+                    {% ifequal cource.graduate_control choice.0 %}
+                        <option selected value="{{ choice.0 }}">{{ choice.1 }}</option>
+                    {% else %}
+                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                    {% endifequal %}
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <label for="graduate_document">Вид выдаваемого документа:</label>
+            <select class="form-control" name="graduate_document" required>
+                {% for choice in GRADUATE_DOCUMENT_CHOICES %}
+                    {% ifequal cource.graduate_document choice.0 %}
+                        <option selected value="{{ choice.0 }}">{{ choice.1 }}</option>
+                    {% else %}
+                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                    {% endifequal %}
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <label for="price">Стоимость обучения:</label>
+            <input class='form-control' type="number" name="price" value="{{ cource.price }}" required>
+        </p>
+            {% if topics %}
+                <h4>Список тем:</h4>
+                <ul>           
+                    {% for topic in topics %}
+                        <li>{{ topic.name }} - {{topic.hours}} часов</li>
+                        <a href="{% url 'delete_topic' topic.id %}">Удалить</a>&nbsp;
+                        <a href="{% url 'edit_topic' topic.id %}">Изменить</a><br>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        <p><a href="{% url 'create_topic' cource.id %}">Добавить тему</a></p>
+
+        {% if schedule %}
+            <h4>Расписание:</h4>
+            <ul>
+            {% for day in schedule %}
+                <li>{{day.day}}: {{day.from_time}} - {{day.to_time}}</li>
+                <a href="{% url 'delete_schedule' day.id %}">Удалить</a>&nbsp;
+                <a href="{% url 'edit_schedule' day.id %}">Изменить</a>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        <p><a href="{% url 'create_schedule' cource.id %}">Добавить расписание</a></p>
+        <p>
+            <button type="submit" class="btn btn-success">Сохранить</button>
+        </p>
+    </form>
+{% endblock %}
