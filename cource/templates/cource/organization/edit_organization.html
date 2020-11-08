@@ -1,0 +1,35 @@
+{% extends "cource/base_user.html" %}
+
+{% block title %}Редактировние организации{% endblock %}
+
+{% block content %}
+    <h2>Редактировать:</h2>
+    <form method="post">
+        {% csrf_token %}
+        <p>
+            <label for="name">Название организации:</label>
+            <input class='form-control' type="text" name="name" value={{ organization.name }}>
+        </p>
+        <p>
+            <label for="email">Электронный адрес</label>
+            <input class='form-control' type="email" name="email" value={{ organization.email }}>
+        </p>
+        <p>
+            <label for="web_site">Адрес сайта</label>
+            <input class='form-control' type="text" name="web_site" value={{ organization.web_site }}>
+        </p>
+        <p>
+            <label for="document_series">Серия документа:</label>
+            <input class='form-control' type="text" name="document_series" value={{ organization.document_series }}>
+        </p>
+        <p>
+            <label for="document_number">Номер документа:</label>
+            <input class='form-control' type="number" name="document_number" value={{ organization.document_number }}>
+        </p>
+        <p>
+            <label for="document_type">Вид документа:</label>
+            <input class='form-control' type="text" name="document_type" value={{ organization.document_type }}>
+        </p>
+        <p><button type="submit" class="btn btn-success">Сохранить</button></p>
+    </form>
+{% endblock %}

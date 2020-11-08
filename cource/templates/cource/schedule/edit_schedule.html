@@ -1,0 +1,31 @@
+{% extends "cource/base_user.html" %}
+
+{% block title %}Редактировние расписания{% endblock %}
+
+{% block content %}
+    <h2>Редактировать:</h2>
+    <form method="post">
+        {% csrf_token %}
+        <p>
+            <label for="day">День:</label>
+            <select class='form-control' name="day" required>
+                {% for day in DAY_CHOICES %}
+                    {% ifequal schedule.day day.0 %}
+                        <option selected value="{{ day.0 }}">{{ day.1 }}</option>
+                    {% else %}
+                        <option value="{{ day.0 }}">{{ day.1 }}</option>
+                    {% endifequal %}
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <label for="from_time">Начало занятия:</label>
+            <input class='form-control' placeholder="HH:MM" type="text" name="from_time" value="{{ schedule.from_time }}" required>
+        </p>
+        <p>
+            <label for="to_time">Конец занятия:</label>
+            <input class='form-control' placeholder="HH:MM" type="text" name="to_time" value="{{ schedule.to_time }}" required>
+        </p>
+        <p><button type="submit" class="btn btn-success">Сохранить</button></p>
+    </form>
+{% endblock %}

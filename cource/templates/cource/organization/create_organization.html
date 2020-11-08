@@ -1,0 +1,12 @@
+{% extends "cource/base.html" %}
+
+{% block title %}Стать преподавателем{% endblock %}
+
+{% block content %}
+    <h1>Новая организация:</h1>
+    <form method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <p><button type="submit" class="btn btn-success">Создать</button></p>
+    </form>
+{% endblock %}

@@ -1,14 +1,14 @@
 from django.db import models
-
-# Create your models here.
+from django.contrib.auth.models import User
 
 class Organization(models.Model):
+    user = models.ForeignKey(User, on_delete = models.CASCADE)
     name = models.CharField('Название организации', max_length=100)
     email = models.CharField('Электронный адрес', max_length=100)
     web_site = models.CharField('Адрес сайта', max_length=100)
     document_series = models.CharField('Серия документа', max_length=100)
     document_number = models.IntegerField('Номер документа')
-    document_series = models.CharField('Вид документа', max_length=100)
+    document_type = models.CharField('Вид документа', max_length=100)
 
     def __str__(self):
         return self.name
@@ -44,8 +44,8 @@ class Cource(models.Model):
     description = models.TextField('Описание')
     type_of_cource = models.CharField('Тип проведения', choices=TYPE_OF_COURCE_CHOICES, max_length=100)  
     attendance = models.CharField('Вид проведения', choices=ATTENDANCE_CHOICES, max_length=100)
-    start_date = models.DateTimeField('Дата начала курсов')
-    end_date = models.DateTimeField('Дата окончания курсов')
+    start_date = models.DateField('Дата начала курсов')
+    end_date = models.DateField('Дата окончания курсов')
     study_hours = models.IntegerField('Колличество часов обучения')
     base_education = models.CharField('Базовое образование', choices=BASE_EDUCATION_CHOICES, max_length=100)
     graduate_control = models.CharField('Вид выпускного контроля', choices=GRADUATE_CONTROL_CHOICES, max_length=100)
@@ -55,7 +55,7 @@ class Cource(models.Model):
 
     def __str__(self):
         return self.title
-
+    
 class Topic(models.Model):
     cource = models.ForeignKey(Cource, on_delete = models.CASCADE)
     name = models.CharField('Название', max_length=100)

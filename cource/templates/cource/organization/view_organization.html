@@ -1,0 +1,23 @@
+{% extends 'cource/base_user.html' %}
+
+{% block title %}
+Организация
+{% endblock %}
+
+{% block content %}
+    <h2>Ваша организация</h2>
+    {% if organization %}       
+        <div class="alert alert-warning mt-2">
+            <h3>{{ organization.name }}</h3>
+            <p>{{ organization.email }}</p>
+            <p>{{ organization.web_site }}</p>
+            <p>{{ organization.document_series }}</p>
+            <p>{{ organization.document_number }}</p>
+            <p>{{ organization.document_type }}</p>
+        </div>
+        <a href="{% url 'delete_organization' %}">Удалить</a>
+        <a href="{% url 'edit_organization' %}">Редактировать</a>
+    {% else %}
+            <p>Организация не найдена</p>
+    {% endif %}
+{% endblock %}

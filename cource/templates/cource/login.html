@@ -1,0 +1,11 @@
+{% extends "cource/base.html" %}
+
+{% block title %}Вход{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <p><button type="submit" class="btn btn-success">Войти</button></p>
+    </form>
+{% endblock %}
