@@ -47,7 +47,7 @@
             <input class='form-control' type="date" name="end_date" value="{{ cource.end_date|date:"Y-m-d" }}" required>
         </p>
         <p>
-            <label for="study_hours">Колличество часов проведения</label>
+            <label for="study_hours">Количество часов проведения</label>
             <input class='form-control' type="number" name="study_hours" value="{{ cource.study_hours }}" required>
         </p>
         <p>
@@ -95,7 +95,7 @@
                 <ul>           
                     {% for topic in topics %}
                         <li>{{ topic.name }} - {{topic.hours}} часов</li>
-                        <a href="{% url 'delete_topic' topic.id %}">Удалить</a>&nbsp;
+                        <a style="color: red;" href="{% url 'delete_topic' topic.id %}">Удалить</a>&nbsp;
                         <a href="{% url 'edit_topic' topic.id %}">Изменить</a><br>
                     {% endfor %}
                 </ul>
@@ -107,7 +107,7 @@
             <ul>
             {% for day in schedule %}
                 <li>{{day.day}}: {{day.from_time}} - {{day.to_time}}</li>
-                <a href="{% url 'delete_schedule' day.id %}">Удалить</a>&nbsp;
+                <a style="color: red;" href="{% url 'delete_schedule' day.id %}">Удалить</a>&nbsp;
                 <a href="{% url 'edit_schedule' day.id %}">Изменить</a>
             {% endfor %}
             </ul>

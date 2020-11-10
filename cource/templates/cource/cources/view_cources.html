@@ -1,14 +1,17 @@
-{% extends 'cource/base_user.html' %}
+{% extends template %}
 
 {% block title %}
-Ваши курсы
+{{ title }}
 {% endblock %}
 
 {% block content %}
-    <h2>Ваши курсы:</h2>
+    <h2>{{title}}:</h2>
     {% if cources %}
         {% for cource in cources %}
             <a href="{% url 'cource' cource.id %}">{{cource.title}}</a><br>
+            {% if is_taking_cources %}
+            <a style="color: red;" href="{% url 'leave_cource' cource.id %}">Отписаться</a><br>
+            {% endif %}
         {% endfor %}
     {% else %}
         <h3>Курсов пока нет(</h3>
