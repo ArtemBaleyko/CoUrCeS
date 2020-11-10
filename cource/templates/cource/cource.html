@@ -48,5 +48,15 @@
     {% ifequal is_owner True %}
         <a href="{% url 'delete_cource' cource.id %}">Удалить</a><br>
         <a href="{% url 'edit_cource' cource.id %}">Редактировать</a><br>
+    {% else %}
+        {% if user.is_authenticated %}
+            {% if is_taking_cource %}
+                <a style="color: red;" href="{% url 'leave_cource' cource.id %}">Отписаться</a>
+            {% else %}
+                <a href="{% url 'take_cource' cource.id %}">Записаться</a>
+            {% endif %}
+        {% else %}
+            <a href="{% url 'register_user' %}">Зарегистрируйтесь</a> или <a href="{% url 'login' %}">Войдите</a> что б записаться на курс</a>
+        {% endif %}
     {% endifequal %}
 {% endblock %}

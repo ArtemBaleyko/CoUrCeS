@@ -15,7 +15,7 @@
             <p>{{ organization.document_number }}</p>
             <p>{{ organization.document_type }}</p>
         </div>
-        <a href="{% url 'delete_organization' %}">Удалить</a>
+        <a style="color: red;" href="{% url 'delete_organization' %}">Удалить</a>
         <a href="{% url 'edit_organization' %}">Редактировать</a>
     {% else %}
             <p>Организация не найдена</p>

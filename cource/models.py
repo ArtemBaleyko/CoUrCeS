@@ -82,3 +82,10 @@ class Schedule(models.Model):
 
     def __str__(self):
         return self.day
+
+class UserCource(models.Model):
+    user = models.ForeignKey(User, on_delete = models.CASCADE)
+    cource = models.ForeignKey(Cource, on_delete = models.CASCADE)
+
+    def __str__(self):
+        return self.user.username

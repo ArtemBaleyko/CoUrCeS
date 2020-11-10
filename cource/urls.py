@@ -21,4 +21,7 @@ urlpatterns = [
     path('create-schedule/<int:cource_id>/', views.create_schedule, name='create_schedule'),
     path('delete-schedule/<int:schedule_id>/', views.delete_schedule, name='delete_schedule'),
     path('edit-schedule/<int:schedule_id>/', views.edit_schedule, name='edit_schedule'),
+    path('view_user_cource', views.view_user_cources, name='view_user_cources'),
+    path('take_cource/<int:cource_id>/', views.take_cource, name='take_cource'),
+    path('leave_cource/<int:cource_id>/', views.leave_cource, name='leave_cource'),
 ]

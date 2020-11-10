@@ -12,7 +12,8 @@
         <nav class="my-2 my-md-0 mr-md-3">
             <a class="p-2 text-dark" href="{% url 'home' %}">Главная</a>
             <a class="p-2 text-dark" href="{% url 'view_organization' %}">Ваша организация</a>
-            <a class="p-2 text-dark" href="{% url 'view_cources' %}">Ваши курсы</a>
+            <a class="p-2 text-dark" href="{% url 'view_user_cources' %}">Ваши курсы</a>
+            <a class="p-2 text-dark" href="{% url 'view_cources' %}">Курсы вашей организации</a>
             <a class="p-2 text-dark" href="{% url 'create_cource' %}">Создать курс</a>
             <a class="p-2 text-dark" href="{% url 'log_out' %}">Выйти</a>
             <a class="p-2 text-dark" disabled>Вы вошли как {{ user.username }}</a>

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
 from django.contrib.auth import authenticate, login, logout
-from .models import Cource, Organization, Topic, Schedule
+from .models import Cource, Organization, Topic, Schedule, UserCource
 from .forms import UserRegistrationForm, LoginForm, OrganizationForm, CourceForm, TopicForm, ScheduleForm
 
 
@@ -20,7 +20,7 @@ def index(request):
     }
     return render(request, 'cource/index.html', context)
 
-# Registration / authentication
+# Registration / Authentication
 
 def register_user(request):
     if request.method == 'POST':
@@ -39,6 +39,7 @@ def register_user(request):
     return render(request, 'cource/register_user.html', {'user_form': user_form})
 
 def login_user(request):
+    errors = ""
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -49,12 +50,14 @@ def login_user(request):
                     login(request, user)
                     return redirect('home')
                 else:
-                    return HttpResponse('Disabled account')
+                    errors = "Disabled account"
+                    return render(request, 'cource/login.html', {'form': form, 'errors':errors})
             else:
-                return HttpResponse('Invalid login')
+                errors = "Пользователь с таким именем не найден"
+                return render(request, 'cource/login.html', {'form': form, 'errors':errors})
     else:
         form = LoginForm()
-    return render(request, 'cource/login.html', {'form': form})
+    return render(request, 'cource/login.html', {'form': form, 'errors':errors})
 
 def logged_out(request):
     logout(request)
@@ -130,8 +133,13 @@ def create_cource(request):
 def view_cources(request):
     organization = Organization.objects.get(user=request.user)
     cources = Cource.objects.filter(organization=organization)
+    template = 'cource/base_user.html'
+    title = 'Курсы Вашей организации'
     context = {
         'cources': cources,
+        'is_taking_cources':False,
+        'template': template,
+        'title': title,
     }
     return render(request, 'cource/cources/view_cources.html', context)
 
@@ -182,10 +190,15 @@ def cource(request, cource_id):
     organization = Organization.objects.get(id=cource.organization_id)
     template = 'cource/base.html'
     is_owner = False
-    if request.user.is_authenticated and request.user.organization_set.count() > 0:
-        template = 'cource/base_user.html'
-        if organization.user == request.user:
-            is_owner = True
+    is_taking_cource = False
+    if request.user.is_authenticated: 
+        if request.user.organization_set.count() > 0:
+            template = 'cource/base_user.html'
+            if organization.user == request.user:
+                is_owner = True
+        if request.user.usercource_set.filter(user=request.user, cource=cource):
+            is_taking_cource = True
+    
     context = {
         'template': template,
         'cource':cource,
@@ -193,8 +206,41 @@ def cource(request, cource_id):
         'topics': topics,
         'organization': organization,
         'is_owner': is_owner,
+        'is_taking_cource': is_taking_cource,
     }
     return render(request, 'cource/cource.html', context)
+
+def view_user_cources(request):
+    cources = Cource.objects.raw('''SELECT * FROM cource_cource c 
+    LEFT JOIN cource_usercource u 
+    ON c.id = u.cource_id 
+    WHERE u.user_id=%s''', [request.user.id])
+    template = 'cource/base.html'
+    title = "Курсы на которые вы записались"
+    if request.user.is_authenticated and request.user.organization_set.count() > 0:
+        template = 'cource/base_user.html'
+    
+    context = {
+        'cources': cources,
+        'is_taking_cources':True,
+        'template':template,
+        'title': title,
+    }
+    return render(request, 'cource/cources/view_cources.html', context)
+
+# CRUD for UserCource
+
+def take_cource(request, cource_id):
+    user_cource = UserCource(user=request.user, cource=Cource.objects.get(id=cource_id))
+    user_cource.save()
+    return redirect('view_user_cources')
+
+def leave_cource(request, cource_id):
+    cource=Cource.objects.get(id=cource_id)
+    print(cource)
+    user_cource = UserCource.objects.get(cource=cource, user=request.user)
+    user_cource.delete()
+    return redirect('view_user_cources')
 
 # CRUD for Topic
 
