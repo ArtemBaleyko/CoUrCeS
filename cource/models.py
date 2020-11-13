@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Organization(models.Model):
     user = models.ForeignKey(User, on_delete = models.CASCADE)
     name = models.CharField('Название организации', max_length=100)
@@ -55,7 +56,7 @@ class Cource(models.Model):
 
     def __str__(self):
         return self.title
-    
+
 class Topic(models.Model):
     cource = models.ForeignKey(Cource, on_delete = models.CASCADE)
     name = models.CharField('Название', max_length=100)
