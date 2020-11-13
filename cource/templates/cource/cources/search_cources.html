@@ -1,0 +1,85 @@
+{% extends template %}
+
+{% block title %}
+Поиск по курсам
+{% endblock %}
+
+{% block content %}
+    <form action="{% url 'search_cources' %}" method="GET">
+        <input type="text" name="title" class="form-control" placeholder="Введите название курса или тему...">
+        <div class="form-row">
+            <div class="form-group col-ml-6">
+                <label for="type_of_cource">Тип проведения:</label>
+                <select class="form-control" name="type_of_cource">
+                        <option></option>
+                    {% for choice in TYPE_OF_COURCE_CHOICES %}
+                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-mt-6">
+                <label for="attendance">Вид проведения:</label>
+                <select class="form-control" name="attendance">
+                        <option></option>
+                    {% for choice in ATTENDANCE_CHOICES %}
+                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-mt-6">
+                <label for="base_education">Базовое образование:</label>
+                <select class="form-control" name="base_education">
+                        <option></option>
+                    {% for choice in BASE_EDUCATION_CHOICES %}
+                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-mt-6">
+                <label for="graduate_control">Вид выпускного контроля:</label>
+                <select class="form-control" name="graduate_control">  
+                        <option></option>
+                    {% for choice in GRADUATE_CONTROL_CHOICES %}
+                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-mt-6">
+                <label for="graduate_document">Вид выдаваемого документа:</label>
+                <select class="form-control" name="graduate_document">
+                        <option></option>
+                    {% for choice in GRADUATE_DOCUMENT_CHOICES %}
+                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-mt-6">
+                <label for="organization">Организация:</label>
+                <select class="form-control" name="organization">
+                        <option></option>
+                    {% for choice in organizations %}
+                        <option value="{{ choice.name }}">{{ choice.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-mt-6">
+                <label for="sort">Сортировать по:</label>
+                <select class="form-control" name="sort">
+                        <option></option>
+                    {% for choice in SORT_CHOICES %}
+                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm btn-block">Найти</button>
+    </form>
+    <h2>Результаты поиска:</h2>
+    {% if cources %}
+        {% for cource in cources %}
+            <a href="{% url 'cource' cource.id %}">{{cource.title}}</a><br>
+        {% endfor %}
+    {% else %}
+        <h3>Такие курсы не найдены</h3>
+    {% endif %}
+{% endblock %}

@@ -24,4 +24,6 @@ urlpatterns = [
     path('view_user_cource', views.view_user_cources, name='view_user_cources'),
     path('take_cource/<int:cource_id>/', views.take_cource, name='take_cource'),
     path('leave_cource/<int:cource_id>/', views.leave_cource, name='leave_cource'),
+    path('search-cources', views.search_cources, name='search_cources'),
+    path('view-search-result', views.view_search_result, name='view_search_result'),
 ]

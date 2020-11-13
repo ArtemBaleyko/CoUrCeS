@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
+from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
 from .models import Cource, Organization, Topic, Schedule, UserCource
 from .forms import UserRegistrationForm, LoginForm, OrganizationForm, CourceForm, TopicForm, ScheduleForm
@@ -10,6 +11,7 @@ from .forms import UserRegistrationForm, LoginForm, OrganizationForm, CourceForm
 
 def index(request):
     cources = Cource.objects.order_by('-id')
+    #cources = Cource.objects.filter(organization__name__contains="папвапвап")
     template = 'cource/base.html'
     if request.user.is_authenticated and request.user.organization_set.count() > 0:
         template = 'cource/base_user.html'
@@ -227,6 +229,78 @@ def view_user_cources(request):
         'title': title,
     }
     return render(request, 'cource/cources/view_cources.html', context)
+
+def search_cources(request):
+    template = 'cource/base_user.html' if request.user.is_authenticated and request.user.organization_set.count() > 0 else 'cource/base.html'
+
+    cources = Cource.objects.all()
+    organizations = Organization.objects.all()
+
+    title = request.GET.get("title")
+    type_of_cource = request.GET.get("type_of_cource")
+    attendance = request.GET.get("attendance")
+    base_education = request.GET.get("base_education")
+    graduate_control = request.GET.get("graduate_control")
+    graduate_document = request.GET.get("graduate_document")
+    organization = request.GET.get("organization")
+    sort = request.GET.get("sort")
+    
+    topics_id = Topic.objects.filter(name=title).values_list('cource_id', flat=True)
+    cources_with_topics = Cource.objects.filter(id__in=list(topics_id))
+    if title is not None:
+        cources = cources.filter(title__contains=title)
+    if type_of_cource != "":
+        cources = cources.filter(type_of_cource=type_of_cource)
+    if attendance != "":
+        cources = cources.filter(attendance=attendance)
+    if base_education != "":
+        cources = cources.filter(base_education=base_education)
+    if graduate_control != "":
+        cources = cources.filter(graduate_control=graduate_control)
+    if graduate_document != "":
+        cources = cources.filter(graduate_document=graduate_document)
+    if organization != "":
+        cources = cources.filter(organization__name=organization)
+    if sort != "":
+        cources = cources.order_by(sort)
+
+    cources = cources | cources_with_topics
+
+    SORT_CHOICES = [
+        ('price', 'От дешевых к дорогим'),
+        ('-price', 'От дорогих к дешевым'),
+    ]
+    context = {
+        'template': template,
+        'cources': cources,
+        'organizations': organizations,
+        'TYPE_OF_COURCE_CHOICES': Cource.TYPE_OF_COURCE_CHOICES,
+        'ATTENDANCE_CHOICES': Cource.ATTENDANCE_CHOICES,
+        'BASE_EDUCATION_CHOICES': Cource.BASE_EDUCATION_CHOICES,
+        'GRADUATE_CONTROL_CHOICES': Cource.GRADUATE_CONTROL_CHOICES,
+        'GRADUATE_DOCUMENT_CHOICES': Cource.GRADUATE_DOCUMENT_CHOICES,
+        'SORT_CHOICES': SORT_CHOICES,
+    }
+    return render(request, 'cource/cources/search_cources.html', context)
+
+def view_search_result(request):
+    template = 'cource/base_user.html' if request.user.is_authenticated and request.user.organization_set.count() > 0 else 'cource/base.html'
+    cources = Cource.objects.all()
+    SORT_CHOICES = [
+        ('price', 'От дешевых к дорогим'),
+        ('-price', 'От дорогих к дешевым'),
+    ]
+    context = {
+        'template': template,
+        'cources': cources,
+        'TYPE_OF_COURCE_CHOICES': Cource.TYPE_OF_COURCE_CHOICES,
+        'ATTENDANCE_CHOICES': Cource.ATTENDANCE_CHOICES,
+        'BASE_EDUCATION_CHOICES': Cource.BASE_EDUCATION_CHOICES,
+        'GRADUATE_CONTROL_CHOICES': Cource.GRADUATE_CONTROL_CHOICES,
+        'GRADUATE_DOCUMENT_CHOICES': Cource.GRADUATE_DOCUMENT_CHOICES,
+        'SORT_CHOICES': SORT_CHOICES,
+    }
+    return render(request, 'cource/cources/search_cources.html', context)
 
 # CRUD for UserCource
 
